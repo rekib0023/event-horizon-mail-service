@@ -2,7 +2,6 @@ package nats
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/nats-io/nats.go"
 	"github.com/rekib0023/event-horizon-mail-server/internal/config"
@@ -44,7 +43,8 @@ func (s *Subscriber) subscribe(subject string, isBulk bool) error {
 		var email email.Email
 		err := json.Unmarshal(msg.Data, &email)
 		if err != nil {
-			s.logg.Fatal(err)
+			s.logg.Error(err)
+			return
 		}
 
 		var templateName string
@@ -60,11 +60,10 @@ func (s *Subscriber) subscribe(subject string, isBulk bool) error {
 		} else {
 			err = s.emailService.SendEmail(email.Recipients[0], email.Subject, templateName, email.Data)
 			if err != nil {
-				s.logg.Fatal(err)
+				s.logg.Error(err)
+				return
 			}
 		}
-
-		fmt.Println("Email sent successfully")
 	})
 
 	if err != nil {
