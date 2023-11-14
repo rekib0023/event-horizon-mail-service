@@ -31,7 +31,7 @@ func NewEmailService(conf *config.Config, logg *logger.Logger) *EmailService {
 }
 
 func (e *EmailService) SendEmail(to, subject, templateName string, data interface{}) error {
-	t, err := template.ParseFiles(fmt.Sprintf("../internal/templates/%s", templateName))
+	t, err := template.ParseFiles(fmt.Sprintf("internal/templates/%s", templateName))
 
 	if err != nil {
 		e.logg.Error("Error parsing template:", err)
